@@ -3,9 +3,9 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { PiPaperPlaneTiltBold } from "react-icons/pi";
 import * as z from "zod";
 import * as zfd from "zod-form-data";
-import { getSessionUser } from "~/auth/server";
-import { db } from "~/db";
-import { posts, tagsToPosts } from "~/db/schema";
+import { getSessionUser } from "~/server/auth";
+import { db } from "~/server/db";
+import { posts, tagsToPosts } from "~/server/db/schema";
 import Editor from "../../components/Editor";
 import SelectEvent from "../../components/SelectEvent";
 import SelectProfile from "../../components/SelectProfile";
@@ -91,12 +91,14 @@ export default async function Draft() {
         return;
       }
 
-      await tx.insert(tagsToPosts).values(
-        tags.map((tagId) => ({
-          tagId,
-          postId: insertedPost.id,
-        })),
-      );
+      if (tags.length > 0) {
+        await tx.insert(tagsToPosts).values(
+          tags.map((tagId) => ({
+            tagId,
+            postId: insertedPost.id,
+          })),
+        );
+      }
     });
 
     redirect("/");
@@ -117,7 +119,7 @@ export default async function Draft() {
   return (
     <form
       action={action}
-      className="flex flex-col items-center gap-y-6 px-8 py-6 pb-24 bg-gray-50 mx-auto"
+      className="mx-auto flex flex-col items-center gap-y-6 bg-gray-50 px-8 py-6 pb-24"
     >
       <h1 className="text-2xl font-bold">Create a Post</h1>
 

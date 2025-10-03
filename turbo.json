@@ -6,36 +6,50 @@
     "MYSQL_DATABASE",
     "MYSQL_USER",
     "MYSQL_HOST",
+    "AUTH_REDIRECT_PATH",
     "AUTH_GOOGLE_ID",
     "AUTH_GOOGLE_SECRET"
   ],
   "tasks": {
     "build": {
-      "dependsOn": ["lint:fix", "typecheck"],
+      "dependsOn": ["db:migrate"],
       "outputs": [".next/**"]
     },
     "check": {
       "dependsOn": [],
       "cache": false
     },
-    "db:up": {
+    "docker:ready": {
       "dependsOn": [],
       "inputs": ["**/*.env.*"],
       "cache": false
     },
     "db:push": {
-      "dependsOn": ["db:up"],
-      "outputs": ["drizzle/**"]
+      "dependsOn": ["docker:ready"],
+      "outputs": ["drizzle/**"],
+      "cache": false
     },
     "db:studio": {
-      "dependsOn": [],
+      "dependsOn": ["docker:ready"],
       "persistent": true,
       "cache": false
     },
     "dev:next": {
-      "dependsOn": ["db:up"],
+      "dependsOn": ["db:push"],
       "persistent": true,
       "cache": false
+    },
+    "lint": {
+      "dependsOn": []
+    },
+    "lint:fix": {
+      "dependsOn": []
+    },
+    "typecheck": {
+      "dependsOn": []
+    },
+    "migrate": {
+      "dependsOn": []
     }
   }
 }
