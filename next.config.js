@@ -16,6 +16,7 @@ return [
     ];
   },
 
+  images: {
     domains: [
       "images.pexels.com",
     ],
