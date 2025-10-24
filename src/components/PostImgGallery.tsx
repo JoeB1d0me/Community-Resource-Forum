@@ -12,6 +12,7 @@ export default function PostImageGallery({ images }: PostImageGalleryProps) {
   const hasOverflow = images.length > 4;
 
   const [scrollIndex, setScrollIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleNext = () => {
     if (scrollIndex < images.length - 4) setScrollIndex(scrollIndex + 1);
@@ -40,7 +41,7 @@ export default function PostImageGallery({ images }: PostImageGalleryProps) {
           <div
             key={i}
             className="relative aspect-square w-full overflow-hidden cursor-pointer rounded-lg"
-            onClick={() => alert(`Clicked image ${i + 1}`)}
+            onClick={() => setSelectedImage(src)}
           >
             <Image
               src={src}
@@ -71,6 +72,31 @@ export default function PostImageGallery({ images }: PostImageGalleryProps) {
           </button>
         </div>
       )}
-    </div>
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 overflow-y-auto"
+          onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="relative mx-auto my-10 max-w-3xl w-[90%] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="absolute top-2 right-2 bg-black/70 text-white px-3 py-1 rounded-md text-sm"
+                  onClick={() => setSelectedImage(null)}
+                  >
+                    X
+                  </button>
+                  <Image
+                    src={selectedImage}
+                    alt="Expanded post image"
+                    width={300}
+                    height={300}
+                    className="object-contain w-full h-auto rounded-md"
+                      />
+                      </div>
+                    </div>
+                  )}
+                  </div>
   );
 }
