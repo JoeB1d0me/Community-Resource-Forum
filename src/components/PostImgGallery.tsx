@@ -90,9 +90,9 @@ export default function PostImageGallery({ images }: PostImageGalleryProps) {
                   <Image
                     src={selectedImage}
                     alt="Expanded post image"
-                    width={300}
-                    height={300}
-                    className="object-contain w-full h-auto rounded-md"
+                    width={500}
+                    height={500}
+                    className="object-contain max-h-[90vh] w-auto rounded-md"
                       />
                       </div>
                     </div>
