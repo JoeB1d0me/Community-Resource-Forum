@@ -6,6 +6,7 @@ import {
   PiPlus,
   PiSignInBold,
   PiSignOut,
+  PiUser,
 } from "react-icons/pi";
 import devdog from "~/assets/devdog.png";
 import signIn from "~/server/actions/signIn";
@@ -42,7 +43,17 @@ export default async function Navigation() {
             >
               <Dropdown.Item asChild>
                 <Link
-                  href="/draft"
+                  href={`/profile/${session.userId}`}
+                  className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
+                >
+                  <PiUser />
+                  Your Profile
+                </Link>
+              </Dropdown.Item>
+              
+              <Dropdown.Item asChild>
+                <Link
+                  href="/create/post"
                   className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
                 >
                   <PiPlus />
@@ -52,7 +63,7 @@ export default async function Navigation() {
 
               <Dropdown.Item asChild>
                 <Link
-                  href="/draft"
+                  href="/create/event"
                   className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
                 >
                   <PiCalendarPlus />
@@ -63,15 +74,13 @@ export default async function Navigation() {
               <Dropdown.Separator className="mx-2 my-1.5 h-px bg-gray-400" />
 
               <form action={signOut} className="contents">
-                <Dropdown.Item asChild>
-                  <button
-                    className="flex items-center gap-3 py-1 pr-6 pl-3 text-red-700 transition-colors hover:bg-red-100 hover:text-red-800"
-                    type="submit"
-                  >
-                    <PiSignOut />
-                    Sign Out
-                  </button>
-                </Dropdown.Item>
+                <button
+                  className="flex items-center gap-3 py-1 pr-6 pl-3 text-red-700 transition-colors hover:bg-red-100 hover:text-red-800"
+                  type="submit"
+                >
+                  <PiSignOut />
+                  Sign Out
+                </button>
               </form>
             </Dropdown.Content>
           </Dropdown.Portal>
