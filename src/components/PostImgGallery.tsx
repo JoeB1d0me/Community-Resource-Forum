@@ -1,58 +1,102 @@
 "use client";
-import { useState } from "react";
+
 import Image from "next/image";
+import { useState } from "react";
 
-type PostImageGalleryProps = {
-  images: string[];  
-};
+interface PostImageGalleryProps {
+  images: string[];
+}
 
-export default function PostImageGallery({images}: PostImageGalleryProps){
-    const [currentImage, setCurrentImage] = useState<string | null>(null);
+export default function PostImageGallery({ images }: PostImageGalleryProps) {
+  const displayImages = images.slice(0, 4);
+  const hasOverflow = images.length > 4;
 
-    if(!images || images.length === 0)return null;
+  const [scrollIndex, setScrollIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-    //Limiting images to 4 for preview
-    const displayImages = images.slice(0,4);
+  const handleNext = () => {
+    if (scrollIndex < images.length - 4) setScrollIndex(scrollIndex + 1);
+  };
+  const handlePrev = () => {
+    if (scrollIndex > 0) setScrollIndex(scrollIndex - 1);
+  };
 
-    return (
-         <div className="mt-3">
-      <div className="grid grid-cols-2 gap-2">
-        {displayImages.map((src, index) => (
-          <div key={index} className="relative">
+  const visibleImages = hasOverflow
+    ? images.slice(scrollIndex, scrollIndex + 4)
+    : displayImages;
+
+  return (
+    <div className="relative w-full max-w-lg mx-auto">
+      {/* Image grid */}
+      <div
+        className={`grid gap-1 ${
+          visibleImages.length === 1
+            ? "grid-cols-1"
+            : visibleImages.length === 2
+            ? "grid-cols-2"
+            : "grid-cols-2"
+        }`}
+      >
+        {visibleImages.map((src, i) => (
+          <div
+            key={i}
+            className="relative aspect-square w-full overflow-hidden cursor-pointer rounded-lg"
+            onClick={() => setSelectedImage(src)}
+          >
             <Image
               src={src}
-              alt={`Post image ${index + 1}`}
-              width={300}
-              height={300}
-              className="rounded-lg object-cover cursor-pointer"
-              onClick={() => setCurrentImage(src)}
+              alt={`Post image ${i + 1}`}
+              fill
+              className="object-cover hover:opacity-90 transition"
             />
-            {images.length > 4 && index === 3 && (
-              <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-lg font-semibold">
-                +{images.length - 4}
-              </div>
-            )}
           </div>
         ))}
       </div>
 
-      {currentImage && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center"
-          onClick={() => setCurrentImage(null)}
-        >
-          <Image
-            src={currentImage}
-            alt="Full view"
-            width={800}
-            height={800}
-            className="rounded-lg object-contain max-h-[90vh]"
-          />
+      {/* Scroll buttons for overflow */}
+      {hasOverflow && (
+        <div className="flex justify-between mt-2">
+          <button
+            onClick={handlePrev}
+            disabled={scrollIndex === 0}
+            className="px-2 py-1 text-sm bg-gray-200 rounded disabled:opacity-50"
+          >
+            ◀
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={scrollIndex >= images.length - 4}
+            className="px-2 py-1 text-sm bg-gray-200 rounded disabled:opacity-50"
+          >
+            ▶
+          </button>
         </div>
       )}
-    </div>
-
-
-
-    );
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 overflow-y-auto"
+          onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="relative mx-auto my-10 max-w-3xl w-[90%] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="absolute top-2 right-2 bg-black/70 text-white px-3 py-1 rounded-md text-sm"
+                  onClick={() => setSelectedImage(null)}
+                  >
+                    X
+                  </button>
+                  <Image
+                    src={selectedImage}
+                    alt="Expanded post image"
+                    width={500}
+                    height={500}
+                    className="object-contain max-h-[90vh] w-auto rounded-md"
+                      />
+                      </div>
+                    </div>
+                  )}
+                  </div>
+  );
 }
