@@ -177,16 +177,6 @@ export default async function HomePage({
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
-            {/* Added for Testing */}
-            <PostImageGallery
-              images={[
-                "https://images.pexels.com/photos/1366242/pexels-photo-1366242.jpeg",
-                "https://images.pexels.com/photos/6969890/pexels-photo-6969890.jpeg",
-                "https://images.pexels.com/photos/32655300/pexels-photo-32655300.jpeg",
-                "https://images.pexels.com/photos/32276165/pexels-photo-32276165.jpeg",
-                "https://images.pexels.com/photos/34120850/pexels-photo-34120850.jpeg",
-
-              ]} />
 
               {event && (
                 <Link
