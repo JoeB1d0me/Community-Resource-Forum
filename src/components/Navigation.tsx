@@ -1,12 +1,18 @@
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { PiCalendarPlus, PiPlus } from "react-icons/pi";
+import {
+  PiCalendarPlus,
+  PiPlus,
+  PiSignInBold,
+  PiSignOut,
+  PiUser,
+} from "react-icons/pi";
 import devdog from "~/assets/devdog.png";
-import { getSessionUser } from "~/auth/server";
+import signIn from "~/server/actions/signIn";
+import signOut from "~/server/actions/signOut";
+import { getSessionUser } from "~/server/auth";
 import Avatar from "./Avatar";
-import SignIn from "./SignIn";
-import SignOut from "./SignOut";
 
 export default async function Navigation() {
   const session = await getSessionUser({
@@ -37,7 +43,17 @@ export default async function Navigation() {
             >
               <Dropdown.Item asChild>
                 <Link
-                  href="/draft"
+                  href={`/profile/${session.userId}`}
+                  className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
+                >
+                  <PiUser />
+                  Your Profile
+                </Link>
+              </Dropdown.Item>
+              
+              <Dropdown.Item asChild>
+                <Link
+                  href="/create/post"
                   className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
                 >
                   <PiPlus />
@@ -47,7 +63,7 @@ export default async function Navigation() {
 
               <Dropdown.Item asChild>
                 <Link
-                  href="/draft"
+                  href="/create/event"
                   className="flex items-center gap-3 py-1 pr-6 pl-3 transition-colors hover:bg-gray-200"
                 >
                   <PiCalendarPlus />
@@ -57,14 +73,29 @@ export default async function Navigation() {
 
               <Dropdown.Separator className="mx-2 my-1.5 h-px bg-gray-400" />
 
-              <Dropdown.Item asChild>
-                <SignOut />
-              </Dropdown.Item>
+              <form action={signOut} className="contents">
+                <button
+                  className="flex items-center gap-3 py-1 pr-6 pl-3 text-red-700 transition-colors hover:bg-red-100 hover:text-red-800"
+                  type="submit"
+                >
+                  <PiSignOut />
+                  Sign Out
+                </button>
+              </form>
             </Dropdown.Content>
           </Dropdown.Portal>
         </Dropdown.Root>
       ) : (
-        <SignIn />
+        <form action={signIn} className="contents">
+          <button
+            className="flex cursor-default items-center gap-1.5 rounded-sm border-b-2 border-sky-900 bg-sky-800 px-4 py-1 text-sm font-medium text-white shadow-sm ring-1 ring-sky-950 transition-colors hover:bg-sky-50 hover:text-sky-800 focus:mt-0.5 focus:border-b-0"
+            type="submit"
+          >
+            <span className="contents">
+              Sign In <PiSignInBold />
+            </span>
+          </button>
+        </form>
       )}
     </nav>
   );
