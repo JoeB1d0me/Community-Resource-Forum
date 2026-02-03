@@ -1,5 +1,5 @@
 Reading schema files:
-/home/sloan/DevDogs-UGA/Community-Resource-Forum/src/server/db/schema.ts
+C:\Users\ehima\Desktop\projects\Community-Resource-Forum\src\server\db\schema.ts
 
 CREATE TABLE `commentVote` (
 	`userId` varchar(255) NOT NULL,
